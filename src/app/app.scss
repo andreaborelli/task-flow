@@ -1,0 +1,47 @@
+
+.welcome {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+
+  &__content {
+    width: min(100%, 720px);
+    padding: clamp(2rem, 5vw, 4rem);
+    background: #fff;
+    border: 1px solid #dce3ed;
+    border-radius: 1.25rem;
+  }
+
+  &__eyebrow {
+    color: #3456a8;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.2;
+  }
+
+  p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  &__link {
+    display: inline-block;
+    padding: 0.85rem 1.25rem;
+    border-radius: 0.5rem;
+    background: #24468f;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:focus-visible {
+      outline: 3px solid #e69a22;
+      outline-offset: 4px;
+    }
+  }
+}

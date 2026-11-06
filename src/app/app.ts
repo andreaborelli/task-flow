@@ -8,5 +8,7 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = signal('task-flow');
-}
+readonly appName = 'TaskFlow';
+  readonly description =
+    'Organizza i tuoi progetti in modo semplice.';
+  }
