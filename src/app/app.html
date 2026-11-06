@@ -1,28 +1,12 @@
 
-<main class="welcome">
-  <section class="welcome__content"
-           aria-labelledby="welcome-title">
-    <span class="welcome__eyebrow">
-      PROJECT MANAGEMENT
-    </span>
+<app-header />
 
-    <h1 id="welcome-title">
-      Benvenuto in {{ appName }}
-    </h1>
+<main class="dashboard">
+  <h1>{{ pageTitle }}</h1>
+  <p>Controlla lo stato delle tue attività.</p>
 
-    <p>{{ description }}</p>
-
-    <a class="welcome__link"
-       href="https://angular.dev"
-       target="_blank"
-       rel="noopener noreferrer">
-      Scopri Angular
-      <span class="sr-only">
-        (si apre in una nuova scheda)
-      </span>
-    </a>
-  </section>
+  <app-task-summary />
 </main>
-
+<app-footer />
 
 <router-outlet />

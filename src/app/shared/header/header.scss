@@ -1,0 +1,28 @@
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.25rem clamp(1rem, 4vw, 3rem);
+  background: #ffffff;
+  border-bottom: 1px solid #dce3ed;
+
+  &__brand {
+    color: #173d86;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-decoration: none;
+
+    &:focus-visible {
+      outline: 3px solid #c47600;
+      outline-offset: 4px;
+    }
+  }
+
+  &__description {
+    color: #475569;
+    font-size: 0.875rem;
+  }
+}
