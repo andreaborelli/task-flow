@@ -9,28 +9,79 @@ import type { Task } from '../../../models/task.model';
   styleUrl: './task-summary.scss'
 })
 export class TaskSummary {
-  // L'elenco è tipizzato e non viene modificato
-  // direttamente da questo componente.
-  readonly tasks: readonly Task[] = MOCK_TASKS;
 
-  // length restituisce il numero di elementi.
-  readonly totalTasks = this.tasks.length;
+  // Crea copie dei dati mock originali.
+  tasks: Task[] = MOCK_TASKS.map(task => ({ ...task }));
 
-  // filter crea un nuovo array con le attività
-  // che rispettano la condizione indicata.
-  readonly completedTasks = this.tasks.filter(
-    (task) => task.status === 'completed'
-  ).length;
+  // Controlla la visibilità del messaggio.
+  showMessage = false;
 
-  readonly pendingTasks = this.tasks.filter(
-    (task) => task.status !== 'completed'
-  ).length;
+  // Restituisce il numero totale delle attività.
+  get totalTasks(): number {
+    return this.tasks.length;
+  }
 
-  // reduce accumula un valore attraversando l'array.
-  // Partiamo da zero e sommiamo 1 per ogni task high.
-  readonly highPriorityTasks = this.tasks.reduce(
-    (total, task) =>
-      total + (task.priority === 'high' ? 1 : 0),
-    0
-  );
+  // Conta le attività completate.
+  get completedTasks(): number {
+    return this.tasks.filter(
+      task => task.status === 'completed'
+    ).length;
+  }
+
+  // Conta le attività ancora da completare.
+  get pendingTasks(): number {
+    return this.tasks.filter(
+      task => task.status !== 'completed'
+    ).length;
+  }
+
+  // Conta le attività con priorità alta.
+  get highPriorityTasks(): number {
+    return this.tasks.filter(
+      task => task.priority === 'high'
+    ).length;
+  }
+
+  // Verifica se lo stato corrente è diverso
+  // dai dati mock originali.
+  get hasChanges(): boolean {
+    return JSON.stringify(this.tasks) !==
+      JSON.stringify(MOCK_TASKS);
+  }
+
+  // Completa la prima attività disponibile.
+  completeNextTask(): void {
+    const index = this.tasks.findIndex(
+      task => task.status !== 'completed'
+    );
+
+    if (index === -1) {
+      return;
+    }
+
+    // map crea un nuovo array senza modificare
+    // direttamente gli oggetti esistenti.
+    this.tasks = this.tasks.map((task, taskIndex) =>
+      taskIndex === index
+        ? { ...task, status: 'completed' }
+        : task
+    );
+
+    this.showMessage = true;
+  }
+
+  // Nasconde il messaggio di conferma.
+  dismissMessage(): void {
+    this.showMessage = false;
+  }
+
+  // Ripristina i dati mock originali.
+  restoreTasks(): void {
+
+    // Crea nuove copie degli oggetti iniziali.
+    this.tasks = MOCK_TASKS.map(task => ({ ...task }));
+
+    // Nasconde il messaggio di conferma.
+    this.showMessage = false;
+  }
 }

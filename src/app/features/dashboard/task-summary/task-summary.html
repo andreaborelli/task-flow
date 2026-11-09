@@ -2,7 +2,7 @@
 <section class="summary" aria-labelledby="summary-title">
   <h2 id="summary-title">Riepilogo attività</h2>
 
-  <!-- dl associa ogni descrizione dt al suo valore dd. -->
+  <!-- dl collega le etichette ai rispettivi valori. -->
   <dl class="summary__grid">
     <div class="summary__card">
       <dt>Attività totali</dt>
@@ -24,4 +24,37 @@
       <dd>{{ highPriorityTasks }}</dd>
     </div>
   </dl>
+
+  <!-- disabled impedisce il click quando non ci sono
+       attività ancora da completare. -->
+  <button
+    class="summary__action"
+    type="button"
+    [disabled]="pendingTasks === 0"
+    (click)="completeNextTask()"
+  >
+    Completa la prossima attività
+  </button>
+
+  <!-- @if mostra il messaggio soltanto quando
+       showMessage è true. -->
+
+         <!-- Ripristina le attività al loro stato iniziale. -->
+  <button
+    class="summary__action"
+    type="button"
+    [disabled]="!hasChanges"
+    (click)="restoreTasks()"
+  >
+    Ripristina attività
+  </button>
+  @if (showMessage) {
+    <div class="summary__message" role="status">
+      <p>Attività completata correttamente.</p>
+
+      <button type="button" (click)="dismissMessage()">
+        Chiudi messaggio
+      </button>
+    </div>
+  }
 </section>
