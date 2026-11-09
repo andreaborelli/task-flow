@@ -2,6 +2,7 @@
 <section class="summary" aria-labelledby="summary-title">
   <h2 id="summary-title">Riepilogo attività</h2>
 
+  <!-- dl associa ogni descrizione dt al suo valore dd. -->
   <dl class="summary__grid">
     <div class="summary__card">
       <dt>Attività totali</dt>
@@ -14,8 +15,13 @@
     </div>
 
     <div class="summary__card">
-      <dt>Da completare</dt>
+      <dt>Non completate</dt>
       <dd>{{ pendingTasks }}</dd>
+    </div>
+
+    <div class="summary__card">
+      <dt>Priorità alta</dt>
+      <dd>{{ highPriorityTasks }}</dd>
     </div>
   </dl>
 </section>
