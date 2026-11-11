@@ -1,67 +1,67 @@
+import { Component, computed, input, output, signal } from '@angular/core';
 
-import { Component } from '@angular/core';
-import { MOCK_TASKS } from '../../../data/mock-tasks';
-import type {
-  Task,
-  TaskStatus
-} from '../../../models/task.model';
+import type { Task, TaskStatus } from '../../../models/task.model';
 
-// Tipo che rappresenta le opzioni del filtro.
 type TaskFilter = 'all' | TaskStatus;
+
+interface TaskFilterOption {
+  readonly id: TaskFilter;
+  readonly label: string;
+}
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.html',
-  styleUrl: './task-list.scss'
+  styleUrl: './task-list.scss',
 })
 export class TaskList {
-  // Creiamo copie dei task per evitare di modificare
-  // direttamente gli oggetti originali del mock.
-  tasks: Task[] = MOCK_TASKS.map(task => ({ ...task }));
+  // Dati ricevuti dal genitore.
+  readonly tasks = input.required<readonly Task[]>();
 
-  // Il filtro iniziale mostra tutte le attività.
-  selectedFilter: TaskFilter = 'all';
+  // Eventi emessi verso il genitore.
+  // Il tipo string indica che inviamo l'ID del task.
+  readonly taskCompleted = output<string>();
+  readonly taskRemoved = output<string>();
 
-  // Getter: ricalcola i risultati quando Angular
-  // legge questa proprietà dal template.
-  get filteredTasks(): Task[] {
-    if (this.selectedFilter === 'all') {
-      return this.tasks;
+  readonly filters: readonly TaskFilterOption[] = [
+    { id: 'all', label: 'Tutte' },
+    { id: 'todo', label: 'Da fare' },
+    { id: 'in-progress', label: 'In corso' },
+    { id: 'completed', label: 'Completate' },
+  ];
+
+  // signal memorizza il filtro attualmente selezionato.
+  readonly selectedFilter = signal<TaskFilter>('all');
+
+  // computed legge sia l'input sia il filtro.
+  readonly filteredTasks = computed(() => {
+    const filter = this.selectedFilter();
+
+    if (filter === 'all') {
+      return this.tasks();
     }
 
-    // filter restituisce solo i task che rispettano
-    // la condizione indicata.
-    return this.tasks.filter(
-      task => task.status === this.selectedFilter
-    );
-  }
+    return this.tasks().filter((task) => task.status === filter);
+  });
 
-  // Cambia il filtro selezionato.
   setFilter(filter: TaskFilter): void {
-    this.selectedFilter = filter;
+    // set assegna un nuovo valore al signal.
+    this.selectedFilter.set(filter);
   }
 
-  // Segna un'attività come completata.
   completeTask(taskId: string): void {
-    this.tasks = this.tasks.map(task =>
-      task.id === taskId
-        ? { ...task, status: 'completed' }
-        : task
-    );
-  }
-    // Segna un'attività come completata.
-  inProgressTask(taskId: string): void {
-    this.tasks = this.tasks.map(task =>
-      task.id === taskId
-        ? { ...task, status: 'in-progress' }
-        : task
-    );
+    // Non modifica direttamente i task.
+    // Comunica al genitore quale attività completare.
+    this.taskCompleted.emit(taskId);
   }
 
-  // Rimuove un'attività dall'elenco locale.
   removeTask(taskId: string): void {
-    this.tasks = this.tasks.filter(
-      task => task.id !== taskId
-    );
+    this.taskRemoved.emit(taskId);
+  }
+
+  readonly taskStarted = output<string>();
+
+  startTask(taskId: string): void {
+    this.taskStarted.emit(taskId);
   }
 }

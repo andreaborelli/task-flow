@@ -1,18 +1,23 @@
-
 <app-header />
 
 <main class="dashboard">
   <h1>{{ pageTitle }}</h1>
   <p>Controlla lo stato delle tue attività.</p>
 
-  <app-task-summary />
+  <!-- [tasks] passa l'array al componente figlio. -->
+  <app-task-summary [tasks]="tasks()" />
 
-  <!-- Nuovo componente per l'elenco delle attività. -->
-  <app-task-list />
+  <!-- Gli output comunicano le azioni al genitore.
+       $event contiene l'ID emesso dal componente. -->
+  <app-task-list
+    [tasks]="tasks()"
+    (taskCompleted)="completeTask($event)"
+    (taskRemoved)="removeTask($event)"
+    (taskStarted)="onTaskStarted($event)"
+  />
+  <div class="task-list__actions">
+    <button type="button" (click)="resetTasks()">Ripristina attività</button>
+  </div>
 </main>
 
-<app-footer />
-
 <router-outlet />
-
-

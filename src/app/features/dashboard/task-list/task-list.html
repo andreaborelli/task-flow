@@ -1,60 +1,26 @@
-
 <section class="task-list" aria-labelledby="tasks-title">
   <div class="task-list__heading">
-    <div>
-      <h2 id="tasks-title">Le mie attività</h2>
-      <p>Organizza e monitora il tuo lavoro.</p>
-    </div>
+    <h2 id="tasks-title">Le mie attività</h2>
+    <p>Organizza e monitora il tuo lavoro.</p>
   </div>
 
-  <!-- Gruppo di pulsanti per filtrare le attività. -->
-  <div
-    class="task-list__filters"
-    role="group"
-    aria-label="Filtra attività per stato"
-  >
-    <button
-      type="button"
-      [attr.aria-pressed]="selectedFilter === 'all'"
-      (click)="setFilter('all')"
-    >
-      Tutte
-    </button>
-
-    <button
-      type="button"
-      [attr.aria-pressed]="selectedFilter === 'todo'"
-      (click)="setFilter('todo')"
-    >
-      Da fare
-    </button>
-
-    <button
-      type="button"
-      [attr.aria-pressed]="selectedFilter === 'in-progress'"
-      (click)="setFilter('in-progress')"
-    >
-      In corso
-    </button>
-
-    <button
-      type="button"
-      [attr.aria-pressed]="selectedFilter === 'completed'"
-      (click)="setFilter('completed')"
-    >
-      Completate
-    </button>
+  <div class="task-list__filters" role="group" aria-label="Filtra attività per stato">
+    @for (filter of filters; track filter.id) {
+      <button
+        type="button"
+        [attr.aria-pressed]="selectedFilter() === filter.id"
+        (click)="setFilter(filter.id)"
+      >
+        {{ filter.label }}
+      </button>
+    }
   </div>
 
-  <!-- role=status annuncia il conteggio aggiornato
-       senza richiedere lo spostamento del focus. -->
-  <p class="task-list__count" role="status">
-    {{ filteredTasks.length }} attività visualizzate
-  </p>
+  <!-- role=status annuncia i cambiamenti del conteggio. -->
+  <p class="task-list__count" role="status">{{ filteredTasks().length }} attività visualizzate</p>
 
   <ul class="task-list__items">
-    <!-- track usa l'identificativo univoco del task. -->
-    @for (task of filteredTasks; track task.id) {
+    @for (task of filteredTasks(); track task.id) {
       <li class="task-list__item">
         <div class="task-list__details">
           <h3>{{ task.title }}</h3>
@@ -63,33 +29,31 @@
             <p>{{ task.description }}</p>
           }
 
-          <!-- @switch visualizza l'etichetta dello stato. -->
-          @switch (task.status) {
-            @case ('todo') {
-              <span class="task-list__status">
+          <span class="task-list__status">
+            @switch (task.status) {
+              @case ('todo') {
                 Da fare
-              </span>
-            }
-            @case ('in-progress') {
-              <span class="task-list__status">
+              }
+              @case ('in-progress') {
                 In corso
-              </span>
-            }
-            @case ('completed') {
-              <span class="task-list__status">
+              }
+              @case ('completed') {
                 Completata
-              </span>
+              }
             }
-            @default {
-              <span>Stato sconosciuto</span>
-            }
-          }
+          </span>
 
           <span class="task-list__priority">
             @switch (task.priority) {
-              @case ('high') { Priorità alta }
-              @case ('medium') { Priorità media }
-              @case ('low') { Priorità bassa }
+              @case ('high') {
+                Priorità alta
+              }
+              @case ('medium') {
+                Priorità media
+              }
+              @case ('low') {
+                Priorità bassa
+              }
             }
           </span>
         </div>
@@ -105,16 +69,6 @@
             </button>
           }
 
-          @if (task.status !== 'in-progress') {
-            <button
-              type="button"
-              (click)="inProgressTask(task.id)"
-              [attr.aria-label]="'In corso: ' + task.title"
-            >
-              In corso
-            </button>
-          }
-
           <button
             type="button"
             (click)="removeTask(task.id)"
@@ -123,11 +77,14 @@
             Elimina
           </button>
         </div>
+        @if (task.status === 'todo') {
+          <div class="task-list__actions">
+            <button type="button" (click)="startTask(task.id)">Avvia attività</button>
+          </div>
+        }
       </li>
     } @empty {
-      <li class="task-list__empty">
-        Nessuna attività corrisponde al filtro selezionato.
-      </li>
+      <li class="task-list__empty">Nessuna attività disponibile.</li>
     }
   </ul>
 </section>

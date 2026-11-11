@@ -1,4 +1,3 @@
-
 .task-list {
   margin-top: 2.5rem;
 
@@ -128,4 +127,15 @@
     border-radius: 0.875rem;
     text-align: center;
   }
+}
+
+// :focus-visible rende visibile il focus,
+// tipicamente durante la navigazione da tastiera.
+.task-list__filters button:focus-visible,
+.task-list__actions button:focus-visible {
+  // Contorno di 3px ad alto contrasto.
+  outline: 3px solid #c47600;
+
+  // Distanzia il contorno dal bordo del pulsante.
+  outline-offset: 3px;
 }

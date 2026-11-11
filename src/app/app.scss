@@ -1,6 +1,3 @@
-
-
-
 .dashboard {
   width: min(100% - 2rem, 1100px);
   margin: 3rem auto;
@@ -15,5 +12,21 @@
     color: #475569;
     line-height: 1.6;
     margin-bottom: 2rem;
+  }
+
+  button {
+    padding: 0.6rem 0.85rem;
+    margin: 1rem 0;
+    border: 1px solid #24468f;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #173d86;
+    font: inherit;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 3px solid #c47600;
+      outline-offset: 3px;
+    }
   }
 }
