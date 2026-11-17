@@ -4,20 +4,30 @@
   <h1>{{ pageTitle }}</h1>
   <p>Controlla lo stato delle tue attività.</p>
 
-  <!-- [tasks] passa l'array al componente figlio. -->
   <app-task-summary [tasks]="tasks()" />
 
-  <!-- Gli output comunicano le azioni al genitore.
-       $event contiene l'ID emesso dal componente. -->
+  <!-- Sezione che visualizza il progresso calcolato. -->
+  <section class="dashboard__progress" aria-labelledby="progress-title">
+    <h2 id="progress-title">Avanzamento complessivo</h2>
+
+    <label for="task-progress"> Attività completate: {{ completionPercentage() }}% </label>
+
+    <!-- progress è un elemento HTML semantico
+         con valore e massimo accessibili. -->
+    <progress id="task-progress" max="100" [value]="completionPercentage()"></progress>
+  </section>
+
+  <div class="dashboard__actions">
+    <!-- Event binding: richiama il metodo di App. -->
+    <button type="button" (click)="addDemoTask()">Aggiungi attività dimostrativa</button>
+
+    <button type="button" (click)="resetTasks()">Ripristina attività</button>
+  </div>
+
+  <!-- I figli leggono la medesima fonte di dati. -->
   <app-task-list
     [tasks]="tasks()"
     (taskCompleted)="completeTask($event)"
     (taskRemoved)="removeTask($event)"
-    (taskStarted)="onTaskStarted($event)"
   />
-  <div class="task-list__actions">
-    <button type="button" (click)="resetTasks()">Ripristina attività</button>
-  </div>
 </main>
-
-<router-outlet />
