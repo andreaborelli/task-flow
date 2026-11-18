@@ -4,30 +4,33 @@
   <h1>{{ pageTitle }}</h1>
   <p>Controlla lo stato delle tue attività.</p>
 
-  <app-task-summary [tasks]="tasks()" />
+  <!-- Entrambi i figli ricevono gli stessi dati. -->
+  <app-task-summary [tasks]="taskStore.tasks()" />
 
-  <!-- Sezione che visualizza il progresso calcolato. -->
   <section class="dashboard__progress" aria-labelledby="progress-title">
     <h2 id="progress-title">Avanzamento complessivo</h2>
 
-    <label for="task-progress"> Attività completate: {{ completionPercentage() }}% </label>
+    <label for="task-progress">
+      Attività completate:
+      {{ taskStore.completionPercentage() }}%
+    </label>
 
-    <!-- progress è un elemento HTML semantico
-         con valore e massimo accessibili. -->
-    <progress id="task-progress" max="100" [value]="completionPercentage()"></progress>
+    <!-- progress è un elemento semantico accessibile. -->
+    <progress id="task-progress" max="100" [value]="taskStore.completionPercentage()"></progress>
   </section>
 
   <div class="dashboard__actions">
-    <!-- Event binding: richiama il metodo di App. -->
-    <button type="button" (click)="addDemoTask()">Aggiungi attività dimostrativa</button>
+    <button type="button" (click)="taskStore.addDemoTask()">Aggiungi attività dimostrativa</button>
 
-    <button type="button" (click)="resetTasks()">Ripristina attività</button>
+    <button type="button" (click)="taskStore.resetTasks()">Ripristina attività</button>
   </div>
 
-  <!-- I figli leggono la medesima fonte di dati. -->
+  <!-- $event contiene l'ID emesso da TaskList. -->
   <app-task-list
-    [tasks]="tasks()"
-    (taskCompleted)="completeTask($event)"
-    (taskRemoved)="removeTask($event)"
+    (taskStarted)="taskStore.startTask($event)"
+    [tasks]="taskStore.tasks()"
+    (taskCompleted)="taskStore.completeTask($event)"
+    (taskRemoved)="taskStore.removeTask($event)"
   />
 </main>
+xx

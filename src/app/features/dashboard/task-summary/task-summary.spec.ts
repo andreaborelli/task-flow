@@ -12,6 +12,7 @@ describe('TaskSummary', () => {
 
     fixture = TestBed.createComponent(TaskSummary);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('tasks', []);
     await fixture.whenStable();
   });
 

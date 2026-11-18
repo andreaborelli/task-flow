@@ -62,6 +62,8 @@ export class TaskList {
   readonly taskStarted = output<string>();
 
   startTask(taskId: string): void {
+    console.log('Avvio attività:', taskId);
+
     this.taskStarted.emit(taskId);
   }
 }
