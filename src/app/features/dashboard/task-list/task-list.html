@@ -4,7 +4,12 @@
     <p>Organizza e monitora il tuo lavoro.</p>
   </div>
 
-  <div class="task-list__filters" role="group" aria-label="Filtra attività per stato">
+  <!-- Il gruppo descrive la funzione dei pulsanti. -->
+  <div
+    class="task-list__filters"
+    role="group"
+    aria-label="Filtra attività per stato"
+  >
     @for (filter of filters; track filter.id) {
       <button
         type="button"
@@ -16,8 +21,10 @@
     }
   </div>
 
-  <!-- role=status annuncia i cambiamenti del conteggio. -->
-  <p class="task-list__count" role="status">{{ filteredTasks().length }} attività visualizzate</p>
+  <!-- Annuncia il conteggio aggiornato. -->
+  <p class="task-list__count" role="status">
+    {{ filteredTasks().length }} attività visualizzate
+  </p>
 
   <ul class="task-list__items">
     @for (task of filteredTasks(); track task.id) {
@@ -29,6 +36,7 @@
             <p>{{ task.description }}</p>
           }
 
+          <!-- Visualizza lo stato corrente del task. -->
           <span class="task-list__status">
             @switch (task.status) {
               @case ('todo') {
@@ -43,22 +51,39 @@
             }
           </span>
 
-          <span class="task-list__priority">
-            @switch (task.priority) {
-              @case ('high') {
-                Priorità alta
+          <!-- La configurazione determina se
+               mostrare la priorità del task. -->
+          @if (config.showPriority) {
+            <span class="task-list__priority">
+              @switch (task.priority) {
+                @case ('high') {
+                  Priorità alta
+                }
+                @case ('medium') {
+                  Priorità media
+                }
+                @case ('low') {
+                  Priorità bassa
+                }
               }
-              @case ('medium') {
-                Priorità media
-              }
-              @case ('low') {
-                Priorità bassa
-              }
-            }
-          </span>
+            </span>
+          }
         </div>
 
         <div class="task-list__actions">
+
+          <!-- Avvia un'attività nello stato "todo". -->
+          @if (task.status === 'todo') {
+            <button
+              type="button"
+              (click)="startTask(task.id)"
+              [attr.aria-label]="'Avvia: ' + task.title"
+            >
+              Avvia
+            </button>
+          }
+
+          <!-- Completa un'attività non ancora completata. -->
           @if (task.status !== 'completed') {
             <button
               type="button"
@@ -69,6 +94,8 @@
             </button>
           }
 
+          <!-- Elimina l'attività indipendentemente
+               dal suo stato corrente. -->
           <button
             type="button"
             (click)="removeTask(task.id)"
@@ -77,14 +104,14 @@
             Elimina
           </button>
         </div>
-        @if (task.status === 'todo') {
-          <div class="task-list__actions">
-            <button type="button" (click)="startTask(task.id)">Avvia attività</button>
-          </div>
-        }
       </li>
     } @empty {
-      <li class="task-list__empty">Nessuna attività disponibile.</li>
+
+      <!-- Il testo proviene dal token iniettato. -->
+      <li class="task-list__empty">
+        {{ config.emptyMessage }}
+      </li>
+
     }
   </ul>
 </section>
